@@ -14,10 +14,12 @@ The project end-result is a presentation of slides which depicts:
 - Has supporting SQL queries written to answer each of the questions.
 - Has supporting visualizations created using the final data of my SQL queries that answers the questions presented in the workspace.
 
-*Software requirements
+![](DVD Rental Database diagram.png)
+
+**Software requirements**
 
 MS-SQL, Excel, Tableau 2019, Power Point, Adobe Acrobat Reader.
 
 Credits
 
-To the Udacity team for this amazing and conceptually in-depth Database project!*
+To the Udacity team for this amazing and conceptually in-depth Database project!
