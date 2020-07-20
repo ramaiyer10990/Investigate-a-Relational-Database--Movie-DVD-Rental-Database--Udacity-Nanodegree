@@ -14,7 +14,7 @@ The project end-result is a presentation of slides which depicts:
 - Has supporting SQL queries written to answer each of the questions.
 - Has supporting visualizations created using the final data of my SQL queries that answers the questions presented in the workspace.
 
-![](DVD Rental Database diagram.png)
+![](image%20ER%20Diagram/DVD%20Rental%20Database%20diagram.png)
 
 **Software requirements**
 
