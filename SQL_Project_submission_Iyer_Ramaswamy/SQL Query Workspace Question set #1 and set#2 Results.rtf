@@ -1,0 +1,212 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2512
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\froman\fcharset0 Times-Bold;\f2\fswiss\fcharset0 ArialMT;
+}
+{\colortbl;\red255\green255\blue255;\red255\green255\blue255;\red26\green26\blue26;\red16\green60\blue192;
+}
+{\*\expandedcolortbl;;\cssrgb\c100000\c100000\c100000;\cssrgb\c13333\c13333\c13333;\cssrgb\c6667\c33333\c80000;
+}
+\margl1440\margr1440\vieww33400\viewh18560\viewkind0
+\deftab720
+\pard\pardeftab720\pardirnatural\partightenfactor0
+
+\f0\fs28 \cf0 Workspace Question Set #1 \
+Q1.\uc0\u8232 Select f.title,c.name, count(r.rental_id)\
+FROM film_category fc\
+JOIN category c\
+ON c.category_id = fc.category_id\
+JOIN film f\
+ON f.film_id = fc.film_id\
+JOIN inventory i\
+ON i.film_id = fc.film_id\
+JOIN rental r\
+ON r.inventory_id=i.inventory_id\
+WHERE c.name IN ('Animation','Children','Classics','Comedy','Family','Music')\
+GROUP BY 1,2\
+ORDER BY 2,1\
+\
+Q2.\
+SELECT f.title, c.name, f.rental_duration, NTILE(4) OVER (ORDER BY f.rental_duration) AS standard_quartile\
+FROM film_category fc\
+JOIN category c\
+ON c.category_id = fc.category_id\
+JOIN film f\
+ON f.film_id = fc.film_id\
+WHERE c.name IN ('Animation', 'Children', 'Classics', 'Comedy', 'Family', 'Music')\
+ORDER BY 3\
+\
+
+\f1\b 2nd way:\
+\pard\pardeftab720\partightenfactor0
+
+\f0\b0 \cf0 \cb2 \expnd0\expndtw0\kerning0
+select x.film_title,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0x.category_name,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0x.rental_duration,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0NTILE(4) OVER (ORDER BY x.rental_duration) standard_Quartile\cb1 \
+\cb2 from (\cb1 \
+\cb2 select a.title film_title,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0{\field{\*\fldinst{HYPERLINK "http://c.name/"}}{\fldrslt \ul \ulc4 c.name}} \'a0category_name ,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0sum (((TO_DATE(TO_CHAR((return_date) ,'DD-MON-YYYY'),'DD-MON-YYYY')) - \cb1 \
+\cb2 (TO_DATE(TO_CHAR((RENTAL_date) ,'DD-MON-YYYY'),'DD-MON-YYYY')))) rental_duration\cb1 \
+\cb2 from \'a0 film a,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0film_category b,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0category c,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0inventory d,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0rental e\cb1 \
+\cb2 \'a0where a.film_id = b.film_id\cb1 \
+\cb2 \'a0and \'a0 b.category_id = c.category_id\cb1 \
+\cb2 \'a0and \'a0 a.film_id = d.film_id\cb1 \
+\cb2 \'a0and \'a0 d.inventory_id = e.inventory_id\cb1 \
+\cb2 \'a0group by a.title,{\field{\*\fldinst{HYPERLINK "http://c.name/"}}{\fldrslt \ul \ulc4 c.name}}\cb1 \
+\cb2 ) x
+\f2 \cf3 \cb1 \
+\pard\pardeftab720\pardirnatural\partightenfactor0
+
+\f0 \cf0 \kerning1\expnd0\expndtw0 \
+\
+Q3. \
+SELECT t1.name, t1.standard_quartile, COUNT(t1.standard_quartile)\
+FROM\
+(SELECT f.title, c.name , f.rental_duration, NTILE(4) OVER (ORDER BY f.rental_duration) AS standard_quartile\
+FROM film_category fc\
+JOIN category c\
+ON c.category_id = fc.category_id\
+JOIN film f\
+ON f.film_id = fc.film_id\
+WHERE c.name IN ('Animation', 'Children', 'Classics', 'Comedy', 'Family', 'Music')) t1 \
+GROUP BY 1, 2\
+ORDER BY 1, 2\
+
+\f1\b \
+2nd way:
+\f0\b0 \
+\pard\pardeftab720\partightenfactor0
+\cf3 \cb2 \expnd0\expndtw0\kerning0
+select a.category_name,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0a.standard_Quartile,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0count(b.rental_count) rental_count\cb1 \
+\cb2 from \cb1 \
+\cb2 (select x.film_title,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0x.category_name,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0x.rental_duration,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0NTILE(4) OVER (ORDER BY x.rental_duration) standard_Quartile\cb1 \
+\cb2 from (\cb1 \
+\cb2 select a.title film_title,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0{\field{\*\fldinst{HYPERLINK "http://c.name/"}}{\fldrslt \cf4 \ul \ulc4 c.name}} \'a0category_name ,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0sum (((TO_DATE(TO_CHAR((return_date) ,'DD-MON-YYYY'),'DD-MON-YYYY')) - \cb1 \
+\cb2 (TO_DATE(TO_CHAR((RENTAL_date) ,'DD-MON-YYYY'),'DD-MON-YYYY')))) rental_duration\cb1 \
+\cb2 from \'a0 film a,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0film_category b,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0category c,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0inventory d,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0rental e\cb1 \
+\cb2 \'a0where a.film_id = b.film_id\cb1 \
+\cb2 \'a0and \'a0 b.category_id = c.category_id\cb1 \
+\cb2 \'a0and \'a0 a.film_id = d.film_id\cb1 \
+\cb2 \'a0and \'a0 d.inventory_id = e.inventory_id\cb1 \
+\cb2 \'a0group by a.title,{\field{\*\fldinst{HYPERLINK "http://c.name/"}}{\fldrslt \cf4 \ul \ulc4 c.name}}\cb1 \
+\cb2 ) x\cb1 \
+\cb2 ) a ,\cb1 \
+\cb2 (\cb1 \
+\cb2 select x.film_title,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0x.category_name,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0x.rental_count\cb1 \
+\cb2 from (\cb1 \
+\cb2 select a.title film_title,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0{\field{\*\fldinst{HYPERLINK "http://c.name/"}}{\fldrslt \cf4 \ul \ulc4 c.name}} \'a0category_name ,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0count(e.rental_id) rental_count\cb1 \
+\cb2 from \'a0 film a,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0film_category b,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0category c,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0inventory d,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0rental e\cb1 \
+\cb2 \'a0where a.film_id = b.film_id\cb1 \
+\cb2 \'a0and \'a0 b.category_id = c.category_id\cb1 \
+\cb2 \'a0and \'a0 a.film_id = d.film_id\cb1 \
+\cb2 \'a0and \'a0 d.inventory_id = e.inventory_id\cb1 \
+\cb2 \'a0group by a.title,{\field{\*\fldinst{HYPERLINK "http://c.name/"}}{\fldrslt \cf4 \ul \ulc4 c.name}}\cb1 \
+\cb2 ) x\cb1 \
+\cb2 ) b\cb1 \
+\cb2 where a.film_title = b.film_title\cb1 \
+\cb2 and \'a0 a.category_name = b.category_name\cb1 \
+\cb2 group by \'a0a.category_name,\cb1 \
+\cb2 \'a0 \'a0 \'a0 \'a0a.standard_Quartile\cb1 \
+\cb2 order by a.category_name,a.standard_quartile\cf0 \cb1 \kerning1\expnd0\expndtw0 \
+\pard\pardeftab720\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+\
+Workspace Question set#2.\
+Q.1\uc0\u8232 SELECT DATE_PART('month', r1.rental_date) AS rental_month, \
+       DATE_PART('year', r1.rental_date) AS rental_year,\
+       ('Store ' || s1.store_id) AS store,\
+       COUNT(*)\
+  FROM store AS s1\
+       JOIN staff AS s2\
+        ON s1.store_id = s2.store_id\
+		\
+       JOIN rental r1\
+        ON s2.staff_id = r1.staff_id\
+ GROUP BY 1, 2, 3\
+ ORDER BY 2, 1;\
+\
+\
+Q.2\
+SELECT DATE_TRUNC('month', p.payment_date) pay_month, c.first_name || ' ' || c.last_name AS full_name, COUNT(p.amount) AS pay_countpermon, SUM(p.amount) AS pay_amount\
+FROM customer c\
+JOIN payment p\
+ON p.customer_id = c.customer_id\
+WHERE c.first_name || ' ' || c.last_name IN\
+(SELECT t1.full_name\
+FROM\
+(SELECT c.first_name || ' ' || c.last_name AS full_name, SUM(p.amount) as amount_total\
+FROM customer c\
+JOIN payment p\
+ON p.customer_id = c.customer_id\
+GROUP BY 1	\
+ORDER BY 2 DESC\
+LIMIT 10) t1) AND (p.payment_date BETWEEN '2007-01-01' AND '2008-01-01')\
+GROUP BY 2, 1\
+ORDER BY 2, 1, 3\
+\
+\
+Q.3\
+WITH t1 AS (SELECT (first_name || ' ' || last_name) AS name, \
+                   c.customer_id, \
+                   p.amount, \
+                   p.payment_date\
+              FROM customer AS c\
+                   JOIN payment AS p\
+                    ON c.customer_id = p.customer_id),\
+\
+     t2 AS (SELECT t1.customer_id\
+              FROM t1\
+             GROUP BY 1\
+             ORDER BY SUM(t1.amount) DESC\
+             LIMIT 10),\
+\
+\
+t3 AS (SELECT t1.name,\
+              DATE_PART('month', t1.payment_date) AS payment_month, \
+              DATE_PART('year', t1.payment_date) AS payment_year,\
+              COUNT (*),\
+              SUM(t1.amount),\
+              SUM(t1.amount) AS total,\
+              LEAD(SUM(t1.amount)) OVER(PARTITION BY t1.name ORDER BY DATE_PART('month', t1.payment_date)) AS lead,\
+              LEAD(SUM(t1.amount)) OVER(PARTITION BY t1.name ORDER BY DATE_PART('month', t1.payment_date)) - SUM(t1.amount) AS lead_dif\
+         FROM t1\
+              JOIN t2\
+               ON t1.customer_id = t2.customer_id\
+        WHERE t1.payment_date BETWEEN '20070101' AND '20080101'\
+        GROUP BY 1, 2, 3\
+        ORDER BY 1, 3, 2)\
+\
+SELECT t3.*,\
+       CASE\
+           WHEN t3.lead_dif = (SELECT MAX(t3.lead_dif) FROM t3 ORDER BY 1 DESC LIMIT 1) THEN 'this is the maximum difference'\
+           ELSE NULL\
+           END AS is_max					\
+  FROM t3\
+ ORDER BY 1;\
+}
